@@ -46,7 +46,7 @@ app.use(express.static(path.join(__dirname, "/public")));
 const store = MongoStore.create({
   mongoUrl: dbUrl,
   crypto: {
-    secret: "mysupersecretcode",
+    secret: process.env.SECRET,
   },
   touchAfter: 24 * 3600,
 });
@@ -57,7 +57,7 @@ store.on("error", () => {
 
 const sessionOptions = {
   store,
-  secret: "mysupersecretcode",
+  secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -66,10 +66,6 @@ const sessionOptions = {
     httpOnly: true,
   },
 };
-
-// app.get("/", (req, res) => {
-//   res.send("Hi I am root");
-// });
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -87,16 +83,6 @@ app.use((req, res, next) => {
   res.locals.currUser = req.user;
   next();
 });
-
-// app.get("/demouser", async (req, res) => {
-//   let fakeUser = new User({
-//     email: "students@gmail.com",
-//     username: "delta's-student",
-//   });
-
-//   let registeredUser = await User.register(fakeUser, "helloworld");
-//   res.send(registeredUser);
-// });
 
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
