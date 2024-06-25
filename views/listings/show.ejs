@@ -134,7 +134,10 @@
           method="POST"
           action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
         >
+          <% if(currUser && review.author._id.toString() ===
+          currUser._id.toString()) { %>
           <button class="btn btn-sm btn-dark">Delete</button>
+          <% } %>
         </form>
       </div>
       <% } %>
